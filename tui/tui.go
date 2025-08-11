@@ -1,8 +1,6 @@
 package tui
 
 import (
-	"fmt"
-
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -20,7 +18,6 @@ type model struct {
 func NewModel(currUi string) model {
 	lgm := InitModelListGames()
 	snake := NewSnakeModel()
-	fmt.Println(snake)
 
 	return model{
 		listGames: lgm,

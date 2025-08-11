@@ -44,7 +44,12 @@ var rootCmd = &cobra.Command{
 			return err
 		}
 
-		_, err = tea.NewProgram(tui.NewModel(tui.SNAKE_GAME_UI), tea.WithAltScreen()).Run()
+		_, err = tea.NewProgram(
+			tui.NewModel(tui.SNAKE_GAME_UI),
+			tea.WithInputTTY(),
+			tea.WithFPS(60),
+			tea.WithAltScreen(),
+		).Run()
 		if err != nil {
 			return fmt.Errorf("error running the application: %w", err)
 		}
