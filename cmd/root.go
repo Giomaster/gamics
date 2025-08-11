@@ -5,9 +5,11 @@ package cmd
 
 import (
 	"fmt"
+	"gamics/tui"
 	"os"
 	"path"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -35,6 +37,19 @@ var rootCmd = &cobra.Command{
 	SilenceUsage:  true,
 	PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 		return loadGeneralConfig()
+	},
+	RunE: func(cmd *cobra.Command, args []string) error {
+		err := checkIfUserIsLoggedIn()
+		if err != nil {
+			return err
+		}
+
+		_, err = tea.NewProgram(tui.NewModel(tui.SNAKE_GAME_UI), tea.WithAltScreen()).Run()
+		if err != nil {
+			return fmt.Errorf("error running the application: %w", err)
+		}
+
+		return nil
 	},
 }
 
@@ -73,7 +88,7 @@ func loadGeneralConfig() error {
 	return nil
 }
 
-func sessionAlreadyIsLoggedIn() error {
+func checkIfUserIsLoggedIn() error {
 	loggedUser := appCfg.GetString("logged-user")
 	if loggedUser == "" {
 		return fmt.Errorf("please log in or register first")
