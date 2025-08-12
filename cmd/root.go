@@ -45,9 +45,9 @@ var rootCmd = &cobra.Command{
 		}
 
 		_, err = tea.NewProgram(
-			tui.NewModel(tui.SNAKE_GAME_UI),
+			tui.NewModel(tui.LIST_GAMES_UI),
 			tea.WithInputTTY(),
-			tea.WithFPS(60),
+			tea.WithFPS(120),
 			tea.WithAltScreen(),
 		).Run()
 		if err != nil {

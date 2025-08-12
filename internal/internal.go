@@ -4,8 +4,12 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"os"
+	"path"
 	"strconv"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
 func InterpolateHexColors(a, b string, n int) []string {
@@ -30,6 +34,24 @@ func InterpolateHexColors(a, b string, n int) []string {
 		out = append(out, fmt.Sprintf("#%02X%02X%02X", r, g, bc))
 	}
 	return out
+}
+
+func GetUser() (string, error) {
+	gamicsDir := path.Join(".", ".gamics")
+	if _, err := os.Stat(gamicsDir); os.IsNotExist(err) {
+		return "", fmt.Errorf("gamics directory does not exist, please register in first")
+	}
+
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(gamicsDir)
+
+	if err := viper.ReadInConfig(); err != nil {
+		return "", fmt.Errorf("could not read config file: %w", err)
+	}
+
+	user := viper.GetString("logged-user")
+	return user, nil
 }
 
 func parseHex(s string) (r, g, b uint8) {

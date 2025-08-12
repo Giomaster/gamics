@@ -12,8 +12,7 @@ import (
 )
 
 var (
-	newPlayer                user
-	initSessionAfterRegister bool
+	newPlayer user
 )
 
 // registerCmd represents the register command
@@ -36,7 +35,6 @@ func init() {
 	rootCmd.AddCommand(registerCmd)
 	registerCmd.Flags().StringVar(&newPlayer.name, "username", "", "Username for the new account")
 	registerCmd.Flags().StringVar(&newPlayer.password, "password", "", "Password for the new account")
-	registerCmd.Flags().BoolVar(&initSessionAfterRegister, "init-session", false, "Initialize session after registration")
 	registerCmd.MarkFlagRequired("username")
 	registerCmd.MarkFlagRequired("password")
 	registerCmd.MarkFlagsRequiredTogether("username", "password")
@@ -70,15 +68,5 @@ func createNewPlayer() error {
 	}
 
 	fmt.Printf("Player %s registered successfully!\n", newPlayer.name)
-
-	if !initSessionAfterRegister {
-		return nil
-	}
-
-	appCfg.Set("logged-user", newPlayer.name)
-	if err := appCfg.WriteConfig(); err != nil {
-		return fmt.Errorf("error writing config file: %w", err)
-	}
-
 	return nil
 }
